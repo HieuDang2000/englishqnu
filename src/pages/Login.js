@@ -1,40 +1,37 @@
-import { dividerClasses } from "@mui/material";
 import React from "react";
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { data: {},user: "", pass:"" };
-  }
+  state = { data: {}, user: "", pass: "" };
   componentDidMount() {
-    fetch("https://script.google.com/macros/s/AKfycbwA6UtQBo_MV4KXWersqoBq1Hae9QJw6ZGlKP6g6FMg9a4PD7N3aewqpTpcg7b7s4fW6g/exec")
-        .then((res) => res.json())
-        .then((json) => {
-            this.setState({
-                data: json,
-            });
-        })
-        console.log(this.state.data);
-}
+    const APIUrl ="https://script.google.com/macros/s/AKfycbwA6UtQBo_MV4KXWersqoBq1Hae9QJw6ZGlKP6g6FMg9a4PD7N3aewqpTpcg7b7s4fW6g/exec";
+    fetch(APIUrl)
+      .then((res) => res.json())
+      .then((json) => {
+        this.setState({
+          data: json,
+        });
+      });
+  };
   handleChange = (event) => {
-    const target = event.target;
-    const name = target.name;
-    this.setState({ [name]: target.value });
+    const {name, value} = event.target;
+    this.setState({ [name]: value });
   };
   handleSubmit = (event) => {
-    const data = this.state.data;
-    const checkUserResult = data.find((d)=> d.user === this.state.user)
-    if (checkUserResult) {
-      if (checkUserResult.pass === this.state.pass){
-        alert("Login successful");
-      }else alert("Login failed");
+    const {data,user,pass} = this.state;
+    const checkUserResult = data.find((u) => u.user === user);
+    if (checkUserResult && checkUserResult.pass === pass) {
+      alert("Login successful");
+      console.log("loi o login")
+      this.props.handlerLogin(user,pass);
+    } 
+    else {
+      alert("Login failed");
+      this.setState({ user: "", pass: "" });
     }
-    else alert("Login failed");
-    this.setState({ user: "", pass: "" });
     event.preventDefault();
   };
-  changeToSignup = (event) => {
-  }
   render() {
+    const {user,pass} = this.state;
+
     return (
       <div className="login">
         <form onSubmit={this.handleSubmit}>
@@ -44,7 +41,7 @@ class Login extends React.Component {
             <input
               type="text"
               name="user"
-              value={this.state.user}
+              value={user}
               onChange={this.handleChange}
             />
           </label>
@@ -54,7 +51,7 @@ class Login extends React.Component {
             <input
               type="password"
               name="pass"
-              value={this.state.pass}
+              value={pass}
               onChange={this.handleChange}
             />
           </label>

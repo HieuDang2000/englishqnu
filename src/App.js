@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { Component } from "react";
+import Login from "./pages/Login";
+import HomePage from "./pages/home/HomePage";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and con cac to save anh reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn con cac
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  
+  state = { user: "", pass: "", login: true };
+  
+  handlerLogin = (user, pass) => {
+    this.setState({
+      user: user,
+      pass: pass,
+      login: true,
+    });
+    console.log("loi o app")
+  };
+
+  handlerLogout = () => {
+    this.setState({ user: "", pass: "", login: false });
+  };
+
+  render() {
+    const isLogin = this.state.login;
+    if (isLogin) {
+      return <HomePage user={this.state.user} logout={this.handlerLogout} />
+    }
+    else return <Login handlerLogin={this.handlerLogin} />
+  }
 }
 
 export default App;
